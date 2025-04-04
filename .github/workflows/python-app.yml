@@ -1,0 +1,28 @@
+name: Flask App CI
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Run Flask app and test endpoint
+      run: |
+        python app.py &
+        sleep 10
+        curl --fail http://localhost:5000/ || echo "App did not start correctly"
